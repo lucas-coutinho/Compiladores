@@ -1,0 +1,136 @@
+PARSER_BEGIN(Karloff)
+import java.io.*;
+public class Karloff {
+
+  public static void main(String args[]) throws ParseException,IOException {
+    
+    Karloff parser = new Karloff(new FileInputStream(args[0]));
+    parser.Karloff();
+  }
+
+}
+
+PARSER_END(Karloff)
+
+SKIP :
+{
+  " "
+| "\t"
+| "\n"
+| "\r"
+}
+
+TOKEN :
+{
+  <MAIN: "main">
+| <ACHAVES: "{">
+| <FCHAVES: "}">
+| <VOID: "void">
+| <TIPO: ("int"|"bool")>
+| <OP : ("+" | "-" | "*" | "/" | "&" | "|" | "<" | ">" | "==")>
+| <NEWVAR : "newVar">
+| <PV : ";">
+| <VIRG : ",">
+| <APARA: "(">
+| <FPARA: ")">
+| <IF : "if">
+| <SOUT: "System.output">
+| <RETURN : "return">
+| <REPEAT : "repeat">
+| <WHILE  : "while">
+| <THEN   : "then">
+| <UNTIL  : "until">
+| <ATTR   : "=">
+| <FUNC   : "func">
+| <TRUE   : "true">
+| <FALSE  : "false">
+}
+
+TOKEN :
+{
+ <TOKEN_ID  : <LETRA> (<LETDIGI>)* (<UNDSCO>)*>
+|<TOKEN_NUM : <DIGITOS><FRACAO><EXPO>>
+|<#DIGITO   : ["0"-"9"]>
+|<#LETRA    : ["a"-"z","A"-"Z"]>
+|<#DIGITOS  : (<DIGITO>)+>
+|<#FRACAO   : ("."<DIGITOS>)?>
+|<#EXPO     : ("E"("+" |"-")? <DIGITOS>)?>
+|<#LETDIGI  : (<LETRA>|<DIGITO>)>
+|<#UNDSCO   : "_"(<LETDIGI>)+>
+}
+
+
+void ListaArg():{}
+{
+  <TIPO><TOKEN_ID>(<VIRG><TIPO><TOKEN_ID>)*
+}
+void SeqComandos():{}
+{
+  (Comando())*
+}
+void Comando():{}
+{
+ <TOKEN_ID> (<ATTR> Exp() <PV> 
+ | <APARA> (ListaExp())? <FPARA> <PV>)
+ | <IF> <APARA> Exp() <FPARA> <THEN> <ACHAVES> SeqComandos() <FCHAVES> <PV>
+ | <WHILE> <APARA> Exp() <FPARA> <ACHAVES> SeqComandos() <FCHAVES> <PV>
+ | <REPEAT> <ACHAVES> SeqComandos() <FCHAVES> <UNTIL> <APARA> Exp() <FCHAVES> <PV>
+ | <RETURN> Exp() <PV>
+ | <SOUT> <APARA> Exp() <FPARA> <PV> 
+}
+void Func():{}
+{
+ (<FUNC> <TIPO> <TOKEN_ID> <APARA> ListaArg() <FPARA>
+ <ACHAVES> SeqComandos() <FCHAVES>)+
+}
+
+void Fator():{}
+{
+ <TOKEN_ID> (<APARA> (ListaExp())? <FPARA>)?
+ |<TOKEN_NUM>
+ |<TRUE>
+ |<FALSE>
+}
+
+void VarDecl():{}
+{
+ (<NEWVAR><TIPO><TOKEN_ID><PV>)*
+}
+void Exp():{}
+{
+ <APARA>Exp1()Exp()<FPARA>
+ |Fator()
+}
+void Exp1():{}
+{
+
+ <OP>Exp()
+}
+void ListaExp():{}
+{
+  Exp() (<VIRG>Exp())*
+}
+void Karloff () :{}
+{ 
+
+  Main() 
+  (Func())?
+  <EOF> 
+}
+	
+
+void Main ():{}
+{
+ <VOID><MAIN> <ACHAVES> 
+ 
+  VarDecl()
+  SeqComandos()
+
+ <FCHAVES>
+
+}
+
+
+
+
+
