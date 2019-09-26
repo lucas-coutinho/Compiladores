@@ -70,11 +70,10 @@ void SeqComandos():{}
 }
 void Comando():{}
 {
- <TOKEN_ID> (<ATTR> Exp() <PV> 
- | <APARA> (ListaExp())? <FPARA> <PV>)
+ <TOKEN_ID> (<ATTR> Exp() <PV> | <APARA> (ListaExp())? <FPARA> <PV>)
  | <IF> <APARA> Exp() <FPARA> <THEN> <ACHAVES> SeqComandos() <FCHAVES> <PV>
  | <WHILE> <APARA> Exp() <FPARA> <ACHAVES> SeqComandos() <FCHAVES> <PV>
- | <REPEAT> <ACHAVES> SeqComandos() <FCHAVES> <UNTIL> <APARA> Exp() <FCHAVES> <PV>
+ | <REPEAT> <ACHAVES> SeqComandos() <FCHAVES> <UNTIL> <APARA> Exp() <FPARA> <PV>
  | <RETURN> Exp() <PV>
  | <SOUT> <APARA> Exp() <FPARA> <PV> 
 }
@@ -86,7 +85,7 @@ void Func():{}
 
 void Fator():{}
 {
- <TOKEN_ID> (<APARA> (ListaExp())? <FPARA>)?
+ <TOKEN_ID>(<APARA> (ListaExp())? <FPARA>)?
  |<TOKEN_NUM>
  |<TRUE>
  |<FALSE>
@@ -96,20 +95,28 @@ void VarDecl():{}
 {
  (<NEWVAR><TIPO><TOKEN_ID><PV>)*
 }
+
 void Exp():{}
 {
- <APARA>Exp1()Exp()<FPARA>
- |Fator()
+ Fator()Exp1()
 }
+
 void Exp1():{}
 {
 
- <OP>Exp()
+ (<OP>Exp())?
 }
+
 void ListaExp():{}
 {
-  Exp() (<VIRG>Exp())*
+  Exp()ListaExp1()
 }
+
+void ListaExp1():{}
+{
+  (<VIRG>Exp())?
+}
+
 void Karloff () :{}
 { 
 
@@ -117,7 +124,6 @@ void Karloff () :{}
   (Func())?
   <EOF> 
 }
-	
 
 void Main ():{}
 {
