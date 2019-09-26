@@ -1,18 +1,9 @@
 void main
 {
-i = a+b;
-
-if(1+2) then {
-  System.output(5);
+i = (a+b);
+if((true+a)) then
+{
+ th((a+b),,(oi - tchau));
 };
-while(1+2){
-  return 1;
-};
-repeat{
-  while(1+2){
-    return 1;
-  };
-  return 2;
-}until(1);
 
 }

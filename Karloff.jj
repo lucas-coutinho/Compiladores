@@ -98,7 +98,8 @@ void VarDecl():{}
 
 void Exp():{}
 {
- Fator()Exp1()
+ <APARA>Exp() <OP> Exp()<FPARA>
+ |Fator()
 }
 
 void Exp1():{}
@@ -114,7 +115,7 @@ void ListaExp():{}
 
 void ListaExp1():{}
 {
-  (<VIRG>Exp())?
+  (<VIRG>Exp())*
 }
 
 void Karloff () :{}
